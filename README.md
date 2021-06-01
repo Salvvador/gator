@@ -22,6 +22,7 @@ Supported browsers:
 - phrase in text -> "insert before" / "change" -> new phrase
 
 # Gestures
+In progress...   
 Have a look in GATOR paper.
 
 # SETUP LEAP MOTION
