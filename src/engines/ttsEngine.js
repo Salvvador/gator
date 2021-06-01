@@ -19,17 +19,17 @@ export function setupTtsEngine(onWordSpokenHandler, onEndOfMessageHandler) {
     onWordSpoken = onWordSpokenHandler;
 }
 
-function doesBrowserSupport() {
-    if (synth === undefined) {
-        return false;
-    }
-    synth.getVoices().forEach(voice => {
-        if (voice.localService) {
-            return true;
-        }
-    });
-    return false;
-}
+// function doesBrowserSupport() {
+//     if (synth === undefined) {
+//         return false;
+//     }
+//     synth.getVoices().forEach(voice => {
+//         if (voice.localService) {
+//             return true;
+//         }
+//     });
+//     return false;
+// }
 
 function interruptPreviousUtterance() {
     synth.cancel();
