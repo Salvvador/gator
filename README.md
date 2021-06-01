@@ -1,14 +1,28 @@
 # SYSTEM REQUIREMENTS
 The setup was tested only for Windows 10. If you are using some other system you are on your own.  
 Supported browsers:
-- Chrome (Chrome has a policy regarding making sound from the website without user interaction. <b>That's why you'll have to click left mouse btn once the website is loaded</b>)
+- Chrome (Chrome has a strict policy regarding voice output. <b>To enable TTS feature click left mouse btn once the website is loaded</b>)
 - Edge  
 
-As of writting this doc (01-06-2021) Edge has way nicer TTS voice
+# HOW TO RUN EXPERIMENT
+1. Follow `SETUP LEAP MOTION`
+2. Open Edge / Chrome (As of writting this doc (01-06-2021) Edge has way nicer TTS voice)
+3. Go to `https://kind-plant-0d14acb03.azurestaticapps.net/`  
+4. Accept permissions to use microphone
+5. (Chrome only - click left mouse button)
+6. Test by saying `start`
 
-# HOW TO
-To run experiment follow `SETUP LEAP MOTION`  
-To create new features follow both `SETUP LEAP MOTION` and `SETUP DEV ENV`
+# Voice Commands
+- "start'
+- "stop"
+- "restart"
+- "repeat"
+- phrase in text -> "delete" / "remove"
+- phrase in text -> "replace" / "change" -> new phrase
+- phrase in text -> "insert before" / "change" -> new phrase
+
+# Gestures
+Have a look in GATOR paper.
 
 # SETUP LEAP MOTION
 1. Download Leap Motion Developer Kit (it will require registartion)
@@ -25,4 +39,6 @@ To create new features follow both `SETUP LEAP MOTION` and `SETUP DEV ENV`
 4. In your browser (Chrome / Edge) open `http://localhost:3000/`
 
 # DEPLOY TO WEBSITE
-Follow this tutorial: https://wolovim.medium.com/deploying-create-react-app-to-s3-or-cloudfront-48dae4ce0af
+Contact:  
+Patryk Pomykalski  
+pspomykalski@gmail.com
