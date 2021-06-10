@@ -22,7 +22,6 @@ export function stopSpeaking() {
     synth.cancel();
 }
 
-
 export function speakVeryQuickly(message) {
     speak(message, true, VERY_QUICK_RATE);
 }
