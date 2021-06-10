@@ -14,13 +14,7 @@ import {
     increaseSelection,
     decreaseSelection
 } from "../drivers/textEditorDriver";
-import {
-    giveLongFeedback,
-    giveQuickFeedback,
-    isTTSSpeaking,
-    stopReadingText,
-    readText
-} from "../drivers/ttsDriver";
+import * as tts from '../modules/tts';
 import {getIndexOfLastWordSpoken, setIndexOfLastWordSpoken, restartIndexOfLastWordSpoken} from "../utils/spokenWordsCounter"
 import {changeContextOfAllLeapMotionGestures} from "../drivers/leapMotionDriver";
 
@@ -67,10 +61,10 @@ function selectPhraseAction(phrase) {
     }
     try {
         selectPhrase(getIndexOfLastWordSpoken(), phrase);
-        giveQuickFeedback("Phrase selected");
+        tts.speakQuickly("Phrase selected");
         changeContextOfAllLeapMotionGestures(SELECTED_CONTEXT);
     } catch(e) {
-        giveLongFeedback("Phrase not found. What I heard was " + phrase);
+        tts.speakQuickly("Phrase not found. What I heard was " + phrase);
         console.log("Phrase not found. What I heard was " + phrase);
         readFromBeginningOfSentence();
     }
@@ -78,7 +72,7 @@ function selectPhraseAction(phrase) {
 
 function restartReadingAction() {
     restartIndexOfLastWordSpoken();
-    readText(getRemainingText(0));
+    tts.speakNormally(getRemainingText(0));
 }
 
 function deleteAction(phrase) {
@@ -87,11 +81,11 @@ function deleteAction(phrase) {
     console.log(getIndexOfLastWordSpoken())
     try {
         selectPhrase(getIndexOfLastWordSpoken(), phrase);
-        giveQuickFeedback("Phrase removed");
+        tts.speakQuickly("Phrase removed");
         const index = deleteSelectedText();
         readFromBeginningOfSentence(index);
     } catch(e) {
-        giveLongFeedback("Phrase not found. What I heard was " + phrase);
+        tts.speakQuickly("Phrase not found. What I heard was " + phrase);
         console.log("Phrase not found. What I heard was " + phrase);
         readFromBeginningOfSentence();
     }
@@ -102,7 +96,7 @@ function replaceAction(phrase) {
     try {
         separationWord = getReplaceSeparationWord(phrase);
     } catch(e) {
-        giveQuickFeedback("No separation word");
+        tts.speakQuickly("No separation word");
         console.log("No separation word");
         readFromBeginningOfSentence();
         return;
@@ -111,24 +105,24 @@ function replaceAction(phrase) {
     const insertionPhrase = phrase.substring(separationWordIndex + separationWord.length + 1);
     const locationPhrase = phrase.substring(0, separationWordIndex);
     if (!insertionPhrase) {
-        giveQuickFeedback("No insertion phrase found");
+        tts.speakQuickly("No insertion phrase found");
         console.log("No insertion phrase found");
         readFromBeginningOfSentence();
         return;
     }
     if (!locationPhrase) {
-        giveQuickFeedback("No location phrase found");
+        tts.speakQuickly("No location phrase found");
         console.log("No location phrase found");
         readFromBeginningOfSentence();
         return;
     }
     try {
         selectPhrase(getIndexOfLastWordSpoken(), locationPhrase);
-        giveQuickFeedback("Phrase replaced");
+        tts.speakQuickly("Phrase replaced");
         const index = replaceSelectedText(insertionPhrase);
         readFromBeginningOfSentence(index);
     } catch(e) {
-        giveLongFeedback("Phrase not found. What I heard was " + locationPhrase);
+        tts.speakQuickly("Phrase not found. What I heard was " + locationPhrase);
         console.log("Phrase not found. What I heard was " + locationPhrase);
         readFromBeginningOfSentence();
     }
@@ -151,7 +145,7 @@ function insertAction(phrase) {
     try {
         separationWord = getInsertSeparationWord(phrase);
     } catch(e) {
-        giveLongFeedback("No separation word");
+        tts.speakQuickly("No separation word");
         console.log("No separation word");
         readFromBeginningOfSentence();
         return;
@@ -167,10 +161,10 @@ function insertAction(phrase) {
         } else {
             index = insertAfterSelectedText(insertionPhrase);
         }
-        giveQuickFeedback("Phrase inserted");
+        tts.speakQuickly("Phrase inserted");
         readFromBeginningOfSentence(index);
     } catch(e) {
-        giveLongFeedback("Phrase not found. What I heard was " + locationPhrase);
+        tts.speakQuickly("Phrase not found. What I heard was " + locationPhrase);
         console.log("Phrase not found. What I heard was " + locationPhrase);
         readFromBeginningOfSentence();
     }
@@ -207,31 +201,31 @@ function readFromBeginningOfSentence() {
 
 function readFromIndex(index) {
     setIndexOfLastWordSpoken(index);
-    readText(getRemainingText(index));
+    tts.speakNormally(getRemainingText(index));
 }
 
 function stopAction() {
-    if (isTTSSpeaking()) {
-        stopReadingText();
-        giveQuickFeedback("Reading stopped");
+    if (tts.isSpeaking()) {
+        tts.stopSpeaking();
+        tts.speakQuickly("Reading stopped");
     }
 }
 
 function undoAction() {
     undo();
-    giveQuickFeedback("Action undone");
+    tts.speakQuickly("Action undone");
     readFromBeginningOfSentence();
 }
 
 function increaseAction() {
     try {
         const currentSelection = increaseSelection();
-        giveQuickFeedback(currentSelection + " selected");
+        tts.speakQuickly(currentSelection + " selected");
     } catch(e) {
         if (e.message === "Maximum text selected") {
-            giveQuickFeedback("Whole text already selected");
+            tts.speakQuickly("Whole text already selected");
         } else {
-            giveQuickFeedback("Nothing selected");
+            tts.speakQuickly("Nothing selected");
         }
     }
 }
@@ -239,8 +233,8 @@ function increaseAction() {
 function decreaseAction() {
     try {
         const currentSelection = decreaseSelection();
-        giveQuickFeedback(currentSelection + " selected");
+        tts.speakQuickly(currentSelection + " selected");
     } catch(e) {
-        giveQuickFeedback("Nothing selected");
+        tts.speakQuickly("Nothing selected");
     }
 }

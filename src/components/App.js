@@ -1,6 +1,6 @@
 import React from 'react';
 import {setupLeapMotionDriver} from "../drivers/leapMotionDriver";
-import {setupTtsDriver} from '../drivers/ttsDriver';
+import * as tts from '../modules/tts';
 import {setupSpeechDriver, startRecording} from "../drivers/speechRecDriver";
 import {setupTextEditorDriver, updateTextEditorRef} from "../drivers/textEditorDriver";
 import TextEditor from "./TextEditor";
@@ -30,7 +30,7 @@ class App extends React.Component {
     }
 
     setupAllDrivers = () => {
-        setupTtsDriver(updateIndexOfLastWordSpoken);
+        tts.setup(updateIndexOfLastWordSpoken);
         setupSpeechDriver();
         setupTextEditorDriver(this.state.text);
         setupLeapMotionDriver();

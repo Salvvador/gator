@@ -1,5 +1,5 @@
 import {setupSpeechRecognitionEngine, startSpeechRecognition, stopSpeechRecognition} from '../engines/speechRecEngine';
-import {stopReadingText} from "./ttsDriver";
+import * as tts from '../modules/tts';
 import {logMessage} from "../utils/logger";
 // import {logRecognizedEvent, logUnrecognizedEvent, plainLogMessage} from "../utils/logger";
 const {FuzzyMatch} = require("../utils/FuzzyMatch");
@@ -87,7 +87,7 @@ function extendCurrentContextReg(phrase) {
 
 function resultCallback(understoodPhrases) {
     if (!understoodPhrases.isFinal) {
-        stopReadingText();
+        tts.stopSpeaking();
         return;
     }
     const currentSentence = understoodPhrases[0].transcript.trim().toLowerCase();

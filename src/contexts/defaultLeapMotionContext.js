@@ -4,7 +4,7 @@ import {
     registerWaveInEvent,
     registerWaveOutEvent
 } from "../drivers/leapMotionDriver";
-import {giveQuickFeedback, isTTSSpeaking, readText, stopReadingText} from "../drivers/ttsDriver";
+import * as tts from '../modules/tts';
 import {
     getRemainingText,
     getStartIndexOfSentence,
@@ -25,9 +25,9 @@ export function registerDefaultLeapMotionContext() {
 
 
 function stopReadingAction() {
-    if (isTTSSpeaking()) {
-        stopReadingText();
-        giveQuickFeedback("Reading stopped");
+    if (tts.isSpeaking()) {
+        tts.stopSpeaking();
+        tts.speakQuickly("Reading stopped");
     }
 }
 
@@ -43,12 +43,12 @@ function rewindAction() {
 
 function readFromIndex(index) {
     setIndexOfLastWordSpoken(index);
-    readText(getRemainingText(index), true);
+    tts.speakNormally(getRemainingText(index), true);
 }
 
 function selectCurrentSentenceAction() {
     selectPhrase(getIndexOfLastWordSpoken());
     increaseSelection();
-    giveQuickFeedback("Sentence selected");
+    tts.speakQuickly("Sentence selected");
     changeContextOfAllLeapMotionGestures(SELECTED_CONTEXT);
 }

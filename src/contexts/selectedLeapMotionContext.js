@@ -10,7 +10,7 @@ import {
     changeContextOfAllLeapMotionGestures,
     registerWaveOutEvent
 } from "../drivers/leapMotionDriver";
-import {giveLongFeedback, giveQuickFeedback, readText} from "../drivers/ttsDriver";
+import * as tts from '../modules/tts';
 import {
     decreaseSelection,
     deleteSelectedText,
@@ -49,29 +49,29 @@ export function registerSelectedLeapMotionContext() {
 }
 
 function replaceLMAction() {
-    giveQuickFeedback("Replaced action selected");
+    tts.speakQuickly("Replaced action selected");
     changeContextOfAllPhrases(REPLACE_CONTEXT)
 }
 
 function insertBeforeLMAction() {
-    giveQuickFeedback("Phrase replaced");
+    tts.speakQuickly("Phrase replaced");
     changeContextOfAllPhrases(INSERT_BEFORE_CONTEXT)
 }
 
 function insertAfterLMAction() {
-    giveQuickFeedback("Phrase replaced");
+    tts.speakQuickly("Phrase replaced");
     changeContextOfAllPhrases(INSERT_BEFORE_CONTEXT)
 }
 
 function replaceAction(phrase) {
     try {
-        giveQuickFeedback("Phrase replaced");
+        tts.speakQuickly("Phrase replaced");
         changeContextOfAllPhrases(DEFAULT_CONTEXT);
         changeContextOfAllLeapMotionGestures(DEFAULT_CONTEXT);
         const index = replaceSelectedText(phrase);
         readFromBeginningOfSentence(index);
     } catch (e) {
-        giveLongFeedback("Phrase not found. What I heard was " + phrase);
+        tts.speakQuickly("Phrase not found. What I heard was " + phrase);
         console.log("Phrase not found. What I heard was " + phrase);
         readFromBeginningOfSentence();
     }
@@ -79,26 +79,26 @@ function replaceAction(phrase) {
 
 function insertBeforeAction(phrase) {
     try {
-        giveQuickFeedback("Phrase replaced");
+        tts.speakQuickly("Phrase replaced");
         changeContextOfAllPhrases(DEFAULT_CONTEXT);
         changeContextOfAllLeapMotionGestures(DEFAULT_CONTEXT);
         const index = insertBeforeSelectedText(phrase);
         readFromBeginningOfSentence(index);
     } catch (e) {
-        giveLongFeedback("Phrase not found. What I heard was " + phrase);
+        tts.speakQuickly("Phrase not found. What I heard was " + phrase);
         readFromBeginningOfSentence();
     }
 }
 
 function insertAfterAction(phrase) {
     try {
-        giveQuickFeedback("Phrase replaced");
+        tts.speakQuickly("Phrase replaced");
         changeContextOfAllPhrases(DEFAULT_CONTEXT);
         changeContextOfAllLeapMotionGestures(DEFAULT_CONTEXT);
         const index = insertAfterSelectedText(phrase);
         readFromBeginningOfSentence(index);
     } catch (e) {
-        giveLongFeedback("Phrase not found. What I heard was " + phrase);
+        tts.speakQuickly("Phrase not found. What I heard was " + phrase);
         console.log("Phrase not found. What I heard was " + phrase);
         readFromBeginningOfSentence();
     }
@@ -106,7 +106,7 @@ function insertAfterAction(phrase) {
 
 function deleteAction() {
     try {
-        giveQuickFeedback("Phrase removed");
+        tts.speakQuickly("Phrase removed");
         changeContextOfAllPhrases(DEFAULT_CONTEXT);
         changeContextOfAllLeapMotionGestures(DEFAULT_CONTEXT);
         const index = deleteSelectedText();
@@ -117,7 +117,7 @@ function deleteAction() {
 }
 
 function stopAction() {
-    giveQuickFeedback("Selection aborted");
+    tts.speakQuickly("Selection aborted");
     changeContextOfAllPhrases(DEFAULT_CONTEXT);
     changeContextOfAllLeapMotionGestures(DEFAULT_CONTEXT);
     const index = unselectText();
@@ -137,18 +137,18 @@ function readFromBeginningOfSentence(index) {
 
 function readFromIndex(index) {
     setIndexOfLastWordSpoken(index);
-    readText(getRemainingText(index));
+    tts.speakNormally(getRemainingText(index));
 }
 
 function increaseAction() {
     try {
         const currentSelection = increaseSelection();
-        giveQuickFeedback(currentSelection + " selected");
+        tts.speakQuickly(currentSelection + " selected");
     } catch (e) {
         if (e.message === "Maximum text selected") {
-            giveQuickFeedback("Whole text already selected");
+            tts.speakQuickly("Whole text already selected");
         } else {
-            giveQuickFeedback("Selection aborted");
+            tts.speakQuickly("Selection aborted");
             changeContextOfAllPhrases(DEFAULT_CONTEXT);
             changeContextOfAllLeapMotionGestures(DEFAULT_CONTEXT);
         }
@@ -158,10 +158,10 @@ function increaseAction() {
 function decreaseAction() {
     try {
         const currentSelection = decreaseSelection();
-        giveQuickFeedback(currentSelection + " selected");
+        tts.speakQuickly(currentSelection + " selected");
     } catch (e) {
         if (e.message === "Selection aborted") {
-            giveQuickFeedback("Selection aborted");
+            tts.speakQuickly("Selection aborted");
             changeContextOfAllPhrases(DEFAULT_CONTEXT);
             changeContextOfAllLeapMotionGestures(DEFAULT_CONTEXT);
             const index = unselectText();
