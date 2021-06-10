@@ -81,6 +81,10 @@ export function decreaseSelection() {
 }
 
 export function selectPhrase(currentIndex, phrase) {
+    console.log('selectPhrase')
+    console.log(currentIndex)
+    console.log(getStartIndexOfPhrase(currentIndex, phrase))
+
     if (phrase === undefined) {
         selectedText.push({ start: currentIndex, textLength: 0 });
         return;

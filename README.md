@@ -11,15 +11,17 @@ Supported browsers:
 4. Accept permissions to use microphone
 5. (Chrome only - click left mouse button)
 6. Test by saying `start`
+Additional notes:  
+For better speach recognition use headphones
 
 # Voice Commands
 - "start'
 - "stop"
 - "restart"
 - "repeat"
-- phrase in text -> "delete" / "remove"
-- phrase in text -> "replace" / "change" -> new phrase
-- phrase in text -> "insert before" / "change" -> new phrase
+- "delete" / "remove" + phrase in text
+- "replace" / "change" + phrase in text + "with" + new phrase
+- "insert" -> new phrase -> "before" / "after" + phrase in text
 
 # Gestures
 In progress...   

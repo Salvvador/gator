@@ -91,15 +91,16 @@ function resultCallback(understoodPhrases) {
         return;
     }
     const currentSentence = understoodPhrases[0].transcript.trim().toLowerCase();
-    logMessage(`${DRIVER_NAME}: understood ${understoodPhrases}`);
+    logMessage(`${DRIVER_NAME}: understood ${currentSentence}`);
 
     const mainCommand = getMainCommandFromSentence(currentSentence);
     const additionalRemarks = getAdditionalRemarkFromSentence(currentSentence).trim();
-
     const phraseFromReg = getPhraseFromReg(mainCommand);
     if (phraseFromReg) {
+        console.log('executePhraseCallbackForCurrentContext')
         executePhraseCallbackForCurrentContext(phraseFromReg, additionalRemarks);
     } else {
+        console.log('executeUnrecognizedForCurrentContext')
         executeUnrecognizedForCurrentContext(currentSentence);
     }
 }
@@ -129,7 +130,7 @@ function getMainCommandFromSentence(currentSentence) {
 }
 
 function getAdditionalRemarkFromSentence(currentSentence) {
-    const currentSentenceWordList = currentSentence.split(" ");
+    const currentSentenceWordList = currentSentence.split('.').join("").split(" ");
     currentSentenceWordList.shift();
     return currentSentenceWordList.join(" ");
 }
@@ -139,10 +140,8 @@ function executePhraseCallbackForCurrentContext(phraseFromReg, additionalRemarks
     const currentContextName = getCurrentContextName(phraseFromReg.phrase);
     const handler = getPhraseCallbackForCurrentContext(phraseContexts, currentContextName);
     if (handler) {
-        // logRecognizedEvent(DRIVER_NAME, phraseFromReg, currentContextName);
         handler(additionalRemarks);
     } else {
-        // logUnrecognizedEvent(DRIVER_NAME, phraseFromReg, currentContextName);
     }
 }
 
