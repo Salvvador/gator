@@ -82,6 +82,9 @@ function restartReadingAction() {
 }
 
 function deleteAction(phrase) {
+    console.log('deleteAction')
+    console.log(phrase)
+    console.log(getIndexOfLastWordSpoken())
     try {
         selectPhrase(getIndexOfLastWordSpoken(), phrase);
         giveQuickFeedback("Phrase removed");

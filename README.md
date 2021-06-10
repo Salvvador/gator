@@ -10,8 +10,9 @@ Supported browsers:
 3. Go to `https://kind-plant-0d14acb03.azurestaticapps.net/`  
 4. Accept permissions to use microphone
 5. (Chrome only - click left mouse button)
-6. Test by saying `start`
-Additional notes:  
+6. Test by saying `start`  
+
+**Additional notes:**  
 For better speach recognition use headphones
 
 # Voice Commands
