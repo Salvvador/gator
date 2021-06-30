@@ -9,6 +9,7 @@ const MAX_ALTERNATIVES = 1;
 let eventsRegistry = [];
 let notInRegistryCallback = () => { console.log('Empty notInRegistryCallback') };
 let shouldBeRecognizing = false;
+let isRecognizing = false;
 
 export function setup(newEventsRegistry, newNotInRegistryCallback) {
     recognition.continuous = CONTINUOUS_RECOGNITION;
@@ -18,49 +19,57 @@ export function setup(newEventsRegistry, newNotInRegistryCallback) {
 
     recognition.onend = endRecognitionCallback;
     recognition.onresult = resultCallback();
-    updateEventRegistry(newEventsRegistry, newNotInRegistryCallback);
+    notInRegistryCallback = newNotInRegistryCallback;
+    updateEventRegistry(newEventsRegistry);
 }
 
 export function start() {
     shouldBeRecognizing = true;
-    recognition.start();
+
+    if (!isRecognizing) {
+        isRecognizing = true;
+        recognition.start();
+    }
 }
 
 export function stop() {
     shouldBeRecognizing = false;
+    isRecognizing = false;
     recognition.stop();
 }
 
-export function updateEventRegistry(newEventsRegistry, newNotInRegistryCallback) {
-    notInRegistryCallback = newNotInRegistryCallback;
+export function updateEventRegistry(newEventsRegistry) {
+    // notInRegistryCallback = newNotInRegistryCallback;
     eventsRegistry = newEventsRegistry;
 }
 
 function resultCallback() {
-    return (event) => {
+    return async (event) => {
         const indexOfLastSentence = event.results.length - 1;
-        const result = event.results[indexOfLastSentence]
+        const result = event.results[indexOfLastSentence];
+        tts.pause();
         if (!result.isFinal) {
-            tts.stopSpeaking();
+            // tts.pause();
             return;
         } else {
-            const sentence = result[0].transcript.split('.').join("");
-            triggerEventCallback(sentence);
+            const sentence = result[0].transcript.split('.').join("").split('?').join("");
+            await triggerEventCallback(sentence);
             // setTimeout(() => {recognition.start()}, NOT_LISTENING_AFTER_COMMAND_TIME);
         }
     }
 }
 
-function triggerEventCallback(phrase) {
+async function triggerEventCallback(phrase) {
+    console.log(phrase)
     for (const event of eventsRegistry) {
         const regex = phrase.match(new RegExp(event.action, 'i'));
         if (regex && regex.length > 0) {
             regex.shift();
-            event.callback(regex);
+            await event.callback(regex);
             return;
         }
     }
-    notInRegistryCallback();
+    notInRegistryCallback(phrase);
 }
 
 function endRecognitionCallback() {

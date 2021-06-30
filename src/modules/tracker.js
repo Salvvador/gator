@@ -1,14 +1,15 @@
+let startIndex = 0;
 let currentIndex = 0;
 
 export function getIndex() {
-    return currentIndex;
+    return startIndex + currentIndex;
 }
 
 export function updateIndex(delta) {
-    currentIndex += delta;
+    currentIndex = delta;
 }
 
 export function setIndex(newIndex) {
-    currentIndex = newIndex;
+    startIndex = newIndex;
+    currentIndex = 0;
 }
-

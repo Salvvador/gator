@@ -4,62 +4,94 @@ import * as tts from '../modules/tts';
 import * as spRec from '../modules/speechRecognition';
 import * as eventReg from '../modules/eventRegister';
 import * as tracker from '../modules/tracker';
-import {setupTextEditorDriver, updateTextEditorRef} from "../drivers/textEditorDriver";
-import TextEditor from "./TextEditor";
-import {registerDefaultVoiceContext} from "../contexts/defaultVoiceContext";
-import {registerDefaultLeapMotionContext} from "../contexts/defaultLeapMotionContext";
-import {registerSelectedLeapMotionContext} from "../contexts/selectedLeapMotionContext";
-import {updateIndexOfLastWordSpoken} from "../utils/spokenWordsCounter"
-import {generateFile} from "../utils/logger"
 import * as txtEditor from '../modules/textEditor';
+import {registerDefaultVoiceContext} from "../contexts/defaultVoiceContext";
+import {registerSelectedContext} from "../contexts/selectedContext";
+import {registerReplaceContext} from "../contexts/replaceContext";
+import {registerInsertAfterContext} from "../contexts/insertAfterContext";
+import {registerInsertBeforeContext} from "../contexts/insertBeforeContext";
+import {generateFile} from "../utils/logger"
 
 class App extends React.Component {
+    text = 'Mr and Mrs Dursley, of number four, Privet Drive, were ' +
+        'proud to say that they were perfectly normal, thank ' +
+        'you very much. They were the last people you’d expect to be ' +
+        'involved in anything strange or mysterious, because they just ' +
+        'didn’t hold with such nonsense.'
 
     state = {
-        text: 'Mr and Mrs Dursley, of number four, Privet Drive, were ' +
-            'proud to say that they were perfectly normal, thank ' +
-            'you very much. They were the last people you’d expect to be ' +
-            'involved in anything strange or mysterious, because they just ' +
-            'didn’t hold with such nonsense.',
-        errorMsg: ''
+        errorMsg: '',
+        paused: false,
+        wordIndex: 0,
+        understoodText: ''
     };
 
     componentDidMount() {
         try {
             this.registerContexts();
             this.setupAllDrivers();
-            spRec.start();
         } catch(e) {
             this.setState({errorMsg: e.message});
         }
     }
 
     setupAllDrivers = () => {
-        tts.setup(tracker.updateIndex);
-        spRec.setup(eventReg.getActionHandlerPairs("DEFAULT", "VOICE"), () => {console.log('git')});
-        setupTextEditorDriver(this.state.text);
+        tts.setup(this.ttsOnWordSpoken);
+        spRec.setup(eventReg.getActionHandlerPairs("DEFAULT", "VOICE"), this.notUnderstoodCallback);
+        txtEditor.setup("#editor-container", this.text);
         setupLeapMotionDriver();
     };
 
+    notUnderstoodCallback = (phrase) => {
+        this.setState({understoodText: phrase})
+        tts.resume();
+    }
+
+    ttsOnWordSpoken = (delta) => {
+        this.setState({wordIndex: tracker.getIndex()});
+        tracker.updateIndex(delta);
+        txtEditor.markWord(tracker.getIndex());
+    }
+
     registerContexts = () => {
         registerDefaultVoiceContext();
+        registerSelectedContext();
+        registerReplaceContext();
+        registerInsertAfterContext();
+        registerInsertBeforeContext();
         // registerDefaultLeapMotionContext();
         // registerSelectedLeapMotionContext();
     };
 
-    onRefUpdate = (ref) => {
-        updateTextEditorRef(ref);
-        txtEditor.updateTextEditorRef(ref);
-    };
+    start = () => {
+        txtEditor.restart();
+        spRec.start();
+        this.setState({paused: false});
+        tracker.setIndex(0);
+        tts.readText(txtEditor.getText());
+    }
+
+    pause = () => {
+        if (this.state.paused) {
+            spRec.start();
+            tts.resume();
+            this.setState({paused: false});
+        } else {
+            spRec.stop();
+            tts.pause();
+            this.setState({paused: true});
+        }
+    }
 
     render() {
         return (
             <>
                 <p>{this.state.errorMsg}</p>
-                <TextEditor
-                    text={this.state.text}
-                    onRefUpdate={this.onRefUpdate}/>
+                <div id="editor-container"></div>
+                <button onClick={this.start}>{ this.state.wordIndex === 0 ? "Start" : "Restart" }</button>
+                <button onClick={this.pause}>{ this.state.paused ? "Resume" : "Pause" }</button>
                 <button onClick={generateFile}>Generate report</button>
+                <p>{this.state.understoodText}</p>
             </>
         )
     }

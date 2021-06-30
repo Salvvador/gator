@@ -3,76 +3,92 @@ import * as spRec from '../modules/speechRecognition';
 import * as eventReg from '../modules/eventRegister';
 import * as tracker from '../modules/tracker';
 import * as txtEditor from '../modules/textEditor';
-import {getNearestSmallerOccurence} from '../utils/textParser';
-import {getStartIndexOfSentence, getRemainingText, deleteSelectedText, selectPhrase} from '../drivers/textEditorDriver';
-import {getIndexOfLastWordSpoken, setIndexOfLastWordSpoken, restartIndexOfLastWordSpoken} from "../utils/spokenWordsCounter"
+import {getNearestSmallerOccurence, getStartIndexOfSentence} from '../utils/textParser';
 
 const DEFAULT_CONTEXT = "DEFAULT";
+const SELECTED_CONTEXT = "SELECTED";
 const VOICE_MODALITY = "VOICE";
 
 
 export function registerDefaultVoiceContext() {
-    eventReg.registerEvent(DEFAULT_CONTEXT, VOICE_MODALITY, 'start', repeatAction);
-    eventReg.registerEvent(DEFAULT_CONTEXT, VOICE_MODALITY, 'delete (.*)', deleteAction);
+    // eventReg.registerEvent(DEFAULT_CONTEXT, VOICE_MODALITY, 'start', repeatAction);
+    // eventReg.registerEvent(DEFAULT_CONTEXT, VOICE_MODALITY, 'delete (.*)', deleteAction);
     eventReg.registerEvent(DEFAULT_CONTEXT, VOICE_MODALITY, 'select (.*)', selectAction);
 }
 
-function repeatAction(phrase) {
-    if (phrase === 'previous') {
-        readFromBeginningOfPreviousSentence();
-        return;
-    }
-    readFromBeginningOfSentence();
-}
+// function repeatAction(phrase) {
+//     if (phrase === 'previous') {
+//         readFromBeginningOfPreviousSentence();
+//         return;
+//     }
+//     readFromBeginningOfSentence();
+// }
 
-function selectAction(phrase) {
-    try {
-        const text = 'Mr and Mrs Dursley, of number four, Privet Drive, were ' +
-            'proud to say that they were perfectly normal, thank ' +
-            'you very much. They were the last people you’d expect to be ' +
-            'involved in anything strange or mysterious, because they just ' +
-            'didn’t hold with such nonsense.';
-        const i = getNearestSmallerOccurence(text, phrase[0], tracker.getIndex());
+async function selectAction(phrase) {
+    tts.pause();
+    const text = txtEditor.getText();
+    const i = getNearestSmallerOccurence(text, phrase[0], tracker.getIndex());
+    if (i !== -1) {
         txtEditor.select(i, phrase[0].length);
-        console.log(i);
-        tts.speakQuickly("Phrase selected");
-    } catch(e) {
-        tts.speakQuickly("Phrase not found. What I heard was " + phrase);
-        console.log("Phrase not found. What I heard was " + phrase);
-        readFromBeginningOfSentence();
+        tts.giveFeedback("Phrase selected");
+        spRec.updateEventRegistry(eventReg.getActionHandlerPairs(SELECTED_CONTEXT, VOICE_MODALITY));
+    } else {
+        await tts.giveFeedback("Phrase not found. What I heard was: select " + phrase);
+        console.log("Phrase not found. What I heard was: select " + phrase);
+        const startIndexOfCurrentSentence = getStartIndexOfSentence(txtEditor.getText(), tracker.getIndex());
+        tracker.setIndex(startIndexOfCurrentSentence);
+        tts.readText(txtEditor.getText(startIndexOfCurrentSentence));
     }
+
+
+
+
+    // try {
+    //     const text = txtEditor.getText();
+    //     const i = getNearestSmallerOccurence(text, phrase[0], tracker.getIndex());
+    //     txtEditor.select(i, phrase[0].length);
+    //     tts.giveFeedback("Phrase selected");
+    // } catch(e) {
+    //     tts.giveFeedback("Phrase not found. What I heard was " + phrase);
+    //     console.log("Phrase not found. What I heard was " + phrase);
+    //     const startIndexOfCurrentSentence = getStartIndexOfSentence(txtEditor.getText(), tracker.getIndex());
+    //     tracker.setIndex(startIndexOfCurrentSentence);
+    //     tts.readText(txtEditor.getText(startIndexOfCurrentSentence));
+    // }
 }
 
-function deleteAction(phrase) {
-    console.log('added')
-    console.log(phrase)
-    try {
-        selectPhrase(getIndexOfLastWordSpoken(), phrase[0]);
-        tts.speakQuickly("Phrase removed");
-        const index = deleteSelectedText();
-        readFromBeginningOfSentence(index);
-    } catch(e) {
-        tts.speakQuickly("Phrase not found. What I heard was " + phrase);
-        console.log("Phrase not found. What I heard was " + phrase);
-        readFromBeginningOfSentence();
-    }
-}
+// function deleteAction(phrase) {
+//     console.log('added')
+//     console.log(phrase)
+//     try {
+//         selectPhrase(getIndexOfLastWordSpoken(), phrase[0]);
+//         tts.giveFeedback("Phrase removed");
+//         const index = deleteSelectedText();
+//         readFromBeginningOfSentence(index);
+//     } catch(e) {
+//         tts.giveFeedback("Phrase not found. What I heard was " + phrase);
+//         console.log("Phrase not found. What I heard was " + phrase);
+//         const startIndexOfCurrentSentence = getStartIndexOfSentence(tracker.getIndex());
+//         tracker.setIndex(startIndexOfCurrentSentence);
+//         tts.readText(getRemainingText(startIndexOfCurrentSentence));
+//     }
+// }
 
-function readFromBeginningOfPreviousSentence() {
-    const startIndexOfCurrentSentence = getStartIndexOfSentence(getIndexOfLastWordSpoken());
-    const startIndexOfPreviousSentence = getStartIndexOfSentence(startIndexOfCurrentSentence - 2);
-    readFromIndex(startIndexOfPreviousSentence);
-}
+// function readFromBeginningOfPreviousSentence() {
+//     const startIndexOfCurrentSentence = getStartIndexOfSentence(getIndexOfLastWordSpoken());
+//     const startIndexOfPreviousSentence = getStartIndexOfSentence(startIndexOfCurrentSentence - 2);
+//     readFromIndex(startIndexOfPreviousSentence);
+// }
 
-function readFromBeginningOfSentence() {
-    const startIndexOfCurrentSentence = getStartIndexOfSentence(getIndexOfLastWordSpoken());
-    readFromIndex(startIndexOfCurrentSentence);
-}
+// function readFromBeginningOfSentence() {
+//     const startIndexOfCurrentSentence = getStartIndexOfSentence(getIndexOfLastWordSpoken());
+//     readFromIndex(startIndexOfCurrentSentence);
+// }
 
-function readFromIndex(index) {
-    setIndexOfLastWordSpoken(index);
-    tts.speakNormally(getRemainingText(index));
-}
+// function readFromIndex(index) {
+//     setIndexOfLastWordSpoken(index);
+//     tts.readText(getRemainingText(index));
+// }
 
 
 // import {

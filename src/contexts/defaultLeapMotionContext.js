@@ -26,7 +26,7 @@ export function registerDefaultLeapMotionContext() {
 
 function stopReadingAction() {
     if (tts.isSpeaking()) {
-        tts.stopSpeaking();
+        tts.cancel();
         tts.speakQuickly("Reading stopped");
     }
 }

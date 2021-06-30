@@ -87,7 +87,7 @@ function extendCurrentContextReg(phrase) {
 
 function resultCallback(understoodPhrases) {
     if (!understoodPhrases.isFinal) {
-        tts.stopSpeaking();
+        tts.cancel();
         return;
     }
     const currentSentence = understoodPhrases[0].transcript.trim().toLowerCase();
