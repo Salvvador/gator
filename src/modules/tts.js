@@ -1,9 +1,9 @@
 const synth = window.speechSynthesis;
 
-const TIMEOUT_TO_CLEAR_UTTERANCE = 350;
+// const TIMEOUT_TO_CLEAR_UTTERANCE = 350;
 const LANGUAGE = 'en-UK';
 const NORMAL_RATE = 1.0;
-const VERY_QUICK_RATE = 2.0;
+// const VERY_QUICK_RATE = 2.0;
 const QUICK_RATE = 1.5;
 
 let onEndOfMessage = undefined;

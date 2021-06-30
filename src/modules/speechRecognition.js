@@ -4,7 +4,7 @@ const recognition = new window.webkitSpeechRecognition();
 const CONTINUOUS_RECOGNITION = true;
 const LANGUAGE = 'en-US';
 const INTERIM_RESULTS = true;
-const NOT_LISTENING_AFTER_COMMAND_TIME = 500;
+// const NOT_LISTENING_AFTER_COMMAND_TIME = 500;
 const MAX_ALTERNATIVES = 1;
 let eventsRegistry = [];
 let notInRegistryCallback = () => { console.log('Empty notInRegistryCallback') };

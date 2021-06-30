@@ -28,9 +28,10 @@ export function getStartIndexOfSentence(text, index) {
 function getAllOccurences(text, phrase) {
     const regex = new RegExp(phrase, 'gi');
     const occurences = [];
-    let match;
-    while (match = regex.exec(text)) {
+    let match = regex.exec(text);
+    while (match !== null) {
         occurences.push(match.index);
+        match = regex.exec(text);
     }
     return occurences;
 }
