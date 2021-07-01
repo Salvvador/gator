@@ -1,4 +1,4 @@
-const FuzzySet = require("fuzzyset.js");
+const FuzzySet = require('fuzzyset.js');
 
 export class FuzzyMatch {
     minScore = 0.6;
@@ -10,10 +10,10 @@ export class FuzzyMatch {
     }
 
     createFuzzySetFromSentence(sentence) {
-        const wordsArray = sentence.split(" ");
+        const wordsArray = sentence.split(' ');
         for (let i = 0; i < wordsArray.length; i++) {
             for (let j = 0; j <= i; j++) {
-                this.fuzzySet.add(wordsArray.slice(j, i + 1).join(" "));
+                this.fuzzySet.add(wordsArray.slice(j, i + 1).join(' '));
             }
         }
     }

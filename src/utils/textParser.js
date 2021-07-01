@@ -1,9 +1,15 @@
-export function getNearestSmallerOccurence(text, phrase, index) {
-    const occurences = getAllOccurences(text, phrase);
-    if (!occurences || occurences.length === 0) return -1;
-    let i = 0;
-    while (i < occurences.length && occurences[i] <= index) i++;
-    return i - 1 >= 0 ? occurences[i - 1] : -1;
+export function findNearestMatchingPhrase(text, phrase, index) {
+    const pastOccurences = getAllOccurences(text.slice(0, index), phrase);
+    if (!pastOccurences || pastOccurences.length === 0) {
+        const futureOccurences = getAllOccurences(text.slice(index, getEndIndexOfSentence(text, index)), phrase);
+        if (!futureOccurences || futureOccurences.length === 0) {
+            return -1;
+        } else {
+            return index + futureOccurences[0];
+        }
+    } else {
+        return pastOccurences[pastOccurences.length - 1];
+    }
 }
 
 export function getWordAt(text, index) {
@@ -24,6 +30,11 @@ export function getStartIndexOfSentence(text, index) {
     return startIndex === -1 ? 0 : startIndex;
 }
 
+export function getEndIndexOfSentence(text, index) {
+    const readText = text.slice(index, text.length);
+    const startIndex = readText.indexOf('.');
+    return startIndex === -1 ? text.length - 1 : startIndex;
+}
 
 function getAllOccurences(text, phrase) {
     const regex = new RegExp(phrase, 'gi');

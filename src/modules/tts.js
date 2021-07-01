@@ -41,13 +41,14 @@ export async function giveFeedback(message) {
         const utterance = new SpeechSynthesisUtterance(message);
         utterance.rate = QUICK_RATE;
         utterance.lang = LANGUAGE;
-        utterance.onend = () => resolve();
+        utterance.onend = () => { console.log('FEEDBACK DONE'); resolve(); };
         synth.speak(utterance);
     });
 }
 
 export function readText(text) {
     cancel();
+    console.log('STARTED SPEAKING');
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = NORMAL_RATE;
     utterance.lang = LANGUAGE;

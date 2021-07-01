@@ -1,9 +1,26 @@
-const events = [];
+import {CONTEXT} from '../utils/enums';
 
-export function registerEvent(context, modality, action, callback) {
-    events.push({context, modality, action, callback});
+const eventRegister = new Map();
+let currentContext = CONTEXT.DEFAULT;
+
+export function setContext(context) {
+    document.getElementById('current-context').innerHTML = `Current context: ${context}`; 
+    currentContext = context;
 }
 
-export function getActionHandlerPairs(context, modality) {
-    return events.filter(event => event.context === context && event.modality === modality)
+export function registerEvent(context, modality, action, callback) {
+    const key = getKey(modality, context);
+    if (!eventRegister.has(key)) {
+        eventRegister.set(key, []);
+    }
+    eventRegister.get(key).push({action, callback});
+}
+
+export function getActionHandlerPairs(modality) {
+    const key = getKey(modality, currentContext);
+    return eventRegister.get(key);
+}
+
+function getKey(modality, context) {
+    return `${modality}:${context}`;
 }

@@ -1,16 +1,16 @@
 import React from 'react';
-import {setupLeapMotionDriver} from "../drivers/leapMotionDriver";
 import * as tts from '../modules/tts';
 import * as spRec from '../modules/speechRecognition';
-import * as eventReg from '../modules/eventRegister';
 import * as tracker from '../modules/tracker';
+import * as eventReg from '../modules/eventRegister';
+import * as leap from '../modules/leap';
 import * as txtEditor from '../modules/textEditor';
-import {registerDefaultVoiceContext} from "../contexts/defaultVoiceContext";
-import {registerSelectedContext} from "../contexts/selectedContext";
-import {registerReplaceContext} from "../contexts/replaceContext";
-import {registerInsertAfterContext} from "../contexts/insertAfterContext";
-import {registerInsertBeforeContext} from "../contexts/insertBeforeContext";
-import {generateFile} from "../utils/logger"
+import * as defaultContext from '../contexts/defaultContext';
+import * as selectedContext from '../contexts/selectedContext';
+import * as replaceContext from '../contexts/replaceContext';
+import * as insertAfterContext from '../contexts/insertAfterContext';
+import * as insertBeforeContext from '../contexts/insertBeforeContext';
+import {CONTEXT} from '../utils/enums';
 
 class App extends React.Component {
     text = 'Mr and Mrs Dursley, of number four, Privet Drive, were ' +
@@ -22,8 +22,7 @@ class App extends React.Component {
     state = {
         errorMsg: '',
         paused: false,
-        wordIndex: 0,
-        understoodText: ''
+        wordIndex: 0
     };
 
     componentDidMount() {
@@ -37,13 +36,12 @@ class App extends React.Component {
 
     setupAllDrivers = () => {
         tts.setup(this.ttsOnWordSpoken);
-        spRec.setup(eventReg.getActionHandlerPairs("DEFAULT", "VOICE"), this.notUnderstoodCallback);
-        txtEditor.setup("#editor-container", this.text);
-        setupLeapMotionDriver();
+        spRec.setup(this.notUnderstoodCallback);
+        txtEditor.setup('#editor-container', this.text);
+        leap.setup((gesture) => console.log(`Gesture: ${gesture} with no registered callback`));
     };
 
     notUnderstoodCallback = (phrase) => {
-        this.setState({understoodText: phrase})
         tts.resume();
     }
 
@@ -54,30 +52,32 @@ class App extends React.Component {
     }
 
     registerContexts = () => {
-        registerDefaultVoiceContext();
-        registerSelectedContext();
-        registerReplaceContext();
-        registerInsertAfterContext();
-        registerInsertBeforeContext();
-        // registerDefaultLeapMotionContext();
-        // registerSelectedLeapMotionContext();
+        defaultContext.register();
+        selectedContext.register();
+        replaceContext.register();
+        insertAfterContext.register();
+        insertBeforeContext.register();
     };
 
     start = () => {
         txtEditor.restart();
         spRec.start();
+        leap.start();
         this.setState({paused: false});
         tracker.setIndex(0);
         tts.readText(txtEditor.getText());
+        eventReg.setContext(CONTEXT.DEFAULT);
     }
 
     pause = () => {
         if (this.state.paused) {
             spRec.start();
+            leap.start();
             tts.resume();
             this.setState({paused: false});
         } else {
             spRec.stop();
+            leap.stop();
             tts.pause();
             this.setState({paused: true});
         }
@@ -87,11 +87,17 @@ class App extends React.Component {
         return (
             <>
                 <p>{this.state.errorMsg}</p>
-                <div id="editor-container"></div>
-                <button onClick={this.start}>{ this.state.wordIndex === 0 ? "Start" : "Restart" }</button>
-                <button onClick={this.pause}>{ this.state.paused ? "Resume" : "Pause" }</button>
-                <button onClick={generateFile}>Generate report</button>
-                <p>{this.state.understoodText}</p>
+                <div id='editor-container'></div>
+                <button onClick={this.start}>{ this.state.wordIndex === 0 ? 'Start' : 'Restart' }</button>
+                <button onClick={this.pause}>{ this.state.paused ? 'Resume' : 'Pause' }</button>
+                <p id='voice-rec-is-on'></p>
+                <p id='gesture-rec-is-on'></p>
+                <p id='left-hand-present'></p>
+                <p id='right-hand-present'></p>
+                <p id='reading-is-on'></p>
+                <p id='detected-gesture'></p>
+                <p id='detected-voice-cmd'></p>
+                <p id='current-context'></p>
             </>
         )
     }

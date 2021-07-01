@@ -1,4 +1,6 @@
 import * as tts from './tts';
+import * as evReg from './eventRegister';
+import {MODALITY} from '../utils/enums';
 const recognition = new window.webkitSpeechRecognition();
 
 const CONTINUOUS_RECOGNITION = true;
@@ -6,12 +8,11 @@ const LANGUAGE = 'en-US';
 const INTERIM_RESULTS = true;
 // const NOT_LISTENING_AFTER_COMMAND_TIME = 500;
 const MAX_ALTERNATIVES = 1;
-let eventsRegistry = [];
 let notInRegistryCallback = () => { console.log('Empty notInRegistryCallback') };
 let shouldBeRecognizing = false;
 let isRecognizing = false;
 
-export function setup(newEventsRegistry, newNotInRegistryCallback) {
+export function setup(newNotInRegistryCallback) {
     recognition.continuous = CONTINUOUS_RECOGNITION;
     recognition.lang = LANGUAGE;
     recognition.interimResults = INTERIM_RESULTS;
@@ -20,7 +21,6 @@ export function setup(newEventsRegistry, newNotInRegistryCallback) {
     recognition.onend = endRecognitionCallback;
     recognition.onresult = resultCallback();
     notInRegistryCallback = newNotInRegistryCallback;
-    updateEventRegistry(newEventsRegistry);
 }
 
 export function start() {
@@ -28,6 +28,7 @@ export function start() {
 
     if (!isRecognizing) {
         isRecognizing = true;
+        document.getElementById('gesture-rec-is-on').innerHTML = `Is recognizing voice: ${isRecognizing}`;
         recognition.start();
     }
 }
@@ -35,12 +36,8 @@ export function start() {
 export function stop() {
     shouldBeRecognizing = false;
     isRecognizing = false;
+    document.getElementById('gesture-rec-is-on').innerHTML = `Is recognizing voice: ${isRecognizing}`; 
     recognition.stop();
-}
-
-export function updateEventRegistry(newEventsRegistry) {
-    // notInRegistryCallback = newNotInRegistryCallback;
-    eventsRegistry = newEventsRegistry;
 }
 
 function resultCallback() {
@@ -49,10 +46,12 @@ function resultCallback() {
         const result = event.results[indexOfLastSentence];
         tts.pause();
         if (!result.isFinal) {
+            document.getElementById('detected-voice-cmd').innerHTML = `Reconized voice command: ${result[0].transcript} (${new Date().toLocaleTimeString()})`;
             // tts.pause();
             return;
         } else {
-            const sentence = result[0].transcript.split('.').join("").split('?').join("");
+            const sentence = result[0].transcript.split('.').join('').split('?').join('');
+            document.getElementById('detected-voice-cmd').innerHTML = `Reconized voice command: ${sentence} (${new Date().toLocaleTimeString()})`;
             await triggerEventCallback(sentence);
             // setTimeout(() => {recognition.start()}, NOT_LISTENING_AFTER_COMMAND_TIME);
         }
@@ -60,8 +59,8 @@ function resultCallback() {
 }
 
 async function triggerEventCallback(phrase) {
-    console.log(phrase)
-    for (const event of eventsRegistry) {
+    console.log('Phrase: ' + phrase)
+    for (const event of evReg.getActionHandlerPairs(MODALITY.VOICE)) {
         const regex = phrase.match(new RegExp(event.action, 'i'));
         if (regex && regex.length > 0) {
             regex.shift();
