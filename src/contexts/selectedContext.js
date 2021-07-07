@@ -6,6 +6,7 @@ import {getStartIndexOfSentence} from '../utils/textParser';
 import {MODALITY, CONTEXT, GESTURE} from '../utils/enums';
 
 export function register() {
+    eventReg.registerEvent(CONTEXT.SELECTED, MODALITY.VOICE, 'stop', stopSelection);
     eventReg.registerEvent(CONTEXT.SELECTED, MODALITY.VOICE, 'delete', deleteAction);
     eventReg.registerEvent(CONTEXT.SELECTED, MODALITY.VOICE, 'replace with (.*)', replaceAction);
     eventReg.registerEvent(CONTEXT.SELECTED, MODALITY.VOICE, 'replace', changeToReplaceMode);
@@ -17,6 +18,23 @@ export function register() {
     eventReg.registerEvent(CONTEXT.SELECTED, MODALITY.GESTURE, GESTURE.HANDS_UPWARD, changeToReplaceMode);
     eventReg.registerEvent(CONTEXT.SELECTED, MODALITY.GESTURE, GESTURE.INDEX_FINGER_LEFT, changeToInsertBeforeMode);
     eventReg.registerEvent(CONTEXT.SELECTED, MODALITY.GESTURE, GESTURE.INDEX_FINGER_RIGHT, changeToInsertAfterMode);
+}
+
+async function stopSelection(phrase) {
+    console.log('insert after')
+    try {
+        txtEditor.restart();
+        await tts.giveFeedback('Unselecting');
+
+        const startIndexOfCurrentSentence = getStartIndexOfSentence(txtEditor.getText(), tracker.getIndex());
+        tracker.setIndex(startIndexOfCurrentSentence);
+        tts.readText(txtEditor.getText(startIndexOfCurrentSentence));
+
+        eventReg.setContext(CONTEXT.DEFAULT);
+    } catch(e) {
+        console.log('Stop selection: ' + e)
+        console.log('Stop selection: ' + phrase);
+    }
 }
 
 async function deleteAction() {

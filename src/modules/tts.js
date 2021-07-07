@@ -4,7 +4,7 @@ const synth = window.speechSynthesis;
 const LANGUAGE = 'en-UK';
 const NORMAL_RATE = 1.0;
 // const VERY_QUICK_RATE = 2.0;
-const QUICK_RATE = 1.5;
+// const QUICK_RATE = 1.5;
 
 let onEndOfMessage = undefined;
 let onWordSpoken = undefined;
@@ -39,7 +39,7 @@ export async function giveFeedback(message) {
         console.log('resolve');
         cancel();
         const utterance = new SpeechSynthesisUtterance(message);
-        utterance.rate = QUICK_RATE;
+        utterance.rate = NORMAL_RATE;
         utterance.lang = LANGUAGE;
         utterance.onend = () => { console.log('FEEDBACK DONE'); resolve(); };
         synth.speak(utterance);
