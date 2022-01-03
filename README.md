@@ -42,6 +42,11 @@ Have a look in GATOR paper.
 3. Start (`npm start`)
 4. In your browser (Chrome / Edge) open `http://localhost:3000/`
 
+# Dev - useful links
+Leap Motion API reference:   
+`https://developer-archive.leapmotion.com/documentation/javascript/api/Leap.Hand.html`
+
+
 # DEPLOY TO WEBSITE
 Contact:  
 Patryk Pomykalski  
