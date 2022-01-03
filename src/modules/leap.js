@@ -37,9 +37,7 @@ setInterval(async function() {
     if (currentFrame === undefined) {
         return;
     }
-    if (!shouldBeRecognizing) {
-        return;
-    }
+    
     let rightHand = null;
     let leftHand = null;
     currentFrame.hands.forEach(hand => {
@@ -52,6 +50,10 @@ setInterval(async function() {
     document.getElementById('left-hand-present').innerHTML = `Is left hand present: ${leftHand ? true : false}`; 
     document.getElementById('right-hand-present').innerHTML = `Is right hand present: ${rightHand ? true : false}`; 
 
+    if (!shouldBeRecognizing) {
+        return;
+    }
+    
     if (holdAfterGestureDetected > 0) {
         holdAfterGestureDetected--;
         return;

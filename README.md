@@ -29,8 +29,8 @@ In progress...
 Have a look in GATOR paper.
 
 # SETUP LEAP MOTION
-1. Download Leap Motion Developer Kit (it will require registartion)
-`https://developer.leapmotion.com/sdk-leap-motion-controller/`
+1. Download Leap Motion Developer Kit - ORION 3.2.1 (it will require registartion)
+`https://developer.leapmotion.com/releases/leap-motion-orion-321-39frn-3b659`
 2. Connect Leap Motion to your laptop
 3. Open Leap Motion Controller Panel
 4. Test your connection in `Visualizer` (right click Leap Motion Controller in taskbar > `Visualizer...`)

@@ -18,7 +18,10 @@ export function registerEvent(context, modality, action, callback) {
 
 export function getActionHandlerPairs(modality) {
     const key = getKey(modality, currentContext);
-    return eventRegister.get(key);
+    if (eventRegister.has(key)) {
+        return eventRegister.get(key);
+    }
+    return [];
 }
 
 function getKey(modality, context) {
