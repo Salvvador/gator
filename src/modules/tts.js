@@ -7,7 +7,7 @@ const FEEDBACK_TIMEOUT = 2000;
 // const VERY_QUICK_RATE = 2.0;
 // const QUICK_RATE = 1.5;
 
-let onEndOfMessage = undefined;
+// let onEndOfMessage = undefined;
 let onWordSpoken = undefined;
 
 export function isSpeaking() {
@@ -19,7 +19,7 @@ export function isPaused() {
 }
 
 export function setup(onWordSpokenHandler, onEndOfMessageHandler) {
-    onEndOfMessage = onEndOfMessageHandler;
+    // onEndOfMessage = onEndOfMessageHandler;
     onWordSpoken = onWordSpokenHandler;
 }
 
