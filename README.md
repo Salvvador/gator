@@ -15,18 +15,34 @@ Supported browsers:
 **Additional notes:**  
 For better speach recognition use headphones
 
-# Voice Commands
-- "start'
-- "stop"
-- "restart"
-- "repeat"
-- "delete" / "remove" + phrase in text
-- "replace" / "change" + phrase in text + "with" + new phrase
-- "insert" -> new phrase -> "before" / "after" + phrase in text
+# Gestures and Voice Commands
+(v - voice command, g - gesture)  
+#### DEFAULT context:
+    v: select <phrase> - select phrase in text, stop reading, switch to SELECTED context
+    g: wave in - jump to the beginning of the current sentence (or jump to the previous sentence if cursor is at the beginning of sentence)
 
-# Gestures
-In progress...   
-Have a look in GATOR paper.
+#### SELECTED context:
+    v: stop - unselect the prase, switch to  DEFAULT context, resume reading
+    v: delete - delete selected phrase, switch to  DEFAULT context, resume reading
+    v: replace - switch to REPLACE context
+    v: insert before / before - switch to INSERT_BEFORE context
+    v: insert after / after - switch to INSERT_AFTER context
+    g: fist_and_throw_away - delete selected phrase, switch to  DEFAULT   context, resume reading
+    g: hand_upward - switch to REPLACE context
+    g: index_finger_left - switch to INSERT_BEFORE context
+    g:  index_finger_right - switch to INSERT_AFTER context
+
+#### INSERT BEFORE context:
+    v: stop - unselect the prase, switch to  DEFAULT context, resume reading
+    v: <phrase> - insert the phrase before the previously selected text, switch to DEFAULT context, resume reading
+
+#### INSERT AFTER context:
+    v: stop - unselect the prase, switch to  DEFAULT context, resume reading
+    v: <phrase> - insert the phrase after the previously selected text, switch to DEFAULT context, resume reading
+
+#### REPLACE context:
+    v: stop - unselect the prase, switch to  DEFAULT context, resume reading
+    v: <phrase> - replace the previously selected text with the new prase, switch to DEFAULT context, resume reading
 
 # SETUP LEAP MOTION
 1. Download Leap Motion Developer Kit - ORION 3.2.1 (it will require registartion)
