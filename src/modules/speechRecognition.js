@@ -28,7 +28,7 @@ export function start() {
 
     if (!isRecognizing) {
         isRecognizing = true;
-        document.getElementById('gesture-rec-is-on').innerHTML = `Is recognizing voice: ${isRecognizing}`;
+        document.getElementById('gesture-rec-is-on').innerHTML = `Is recognizing voice: <span class='true'>true</span>`;
         recognition.start();
     }
 }
@@ -36,7 +36,7 @@ export function start() {
 export function stop() {
     shouldBeRecognizing = false;
     isRecognizing = false;
-    document.getElementById('gesture-rec-is-on').innerHTML = `Is recognizing voice: ${isRecognizing}`; 
+    document.getElementById('gesture-rec-is-on').innerHTML = `Is recognizing voice: <span class='false'>false</span>`; 
     recognition.stop();
 }
 

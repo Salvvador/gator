@@ -17,12 +17,12 @@ export function setup(newNotInRegistryCallback) {
 
 export function start() {
     shouldBeRecognizing = true;
-    document.getElementById('voice-rec-is-on').innerHTML = `Is recognizing gestures: ${shouldBeRecognizing}`; 
+    document.getElementById('voice-rec-is-on').innerHTML = `Is recognizing gestures: <span class='true'>true</span>`; 
 }
 
 export function stop() {
     shouldBeRecognizing = false;
-    document.getElementById('voice-rec-is-on').innerHTML = `Is recognizing gestures: ${shouldBeRecognizing}`; 
+    document.getElementById('voice-rec-is-on').innerHTML = `Is recognizing gestures: <span class='false'>false</span>`; 
 }
 
 export function unregister() {
@@ -47,8 +47,8 @@ setInterval(async function() {
             leftHand = hand;
         }
     });
-    document.getElementById('left-hand-present').innerHTML = `Is left hand present: ${leftHand ? true : false}`; 
-    document.getElementById('right-hand-present').innerHTML = `Is right hand present: ${rightHand ? true : false}`; 
+    document.getElementById('left-hand-present').innerHTML = `Is left hand present: ${leftHand ? "<span class='true'>true</span>" : "<span class='false'>false</span>"}`; 
+    document.getElementById('right-hand-present').innerHTML = `Is right hand present: ${rightHand ? "<span class='true'>true</span>" : "<span class='false'>false</span>"}`; 
 
     if (!shouldBeRecognizing) {
         return;

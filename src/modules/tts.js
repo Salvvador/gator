@@ -3,6 +3,7 @@ const synth = window.speechSynthesis;
 // const TIMEOUT_TO_CLEAR_UTTERANCE = 350;
 const LANGUAGE = 'en-US';
 const NORMAL_RATE = 1.0;
+const FEEDBACK_TIMEOUT = 2000;
 // const VERY_QUICK_RATE = 2.0;
 // const QUICK_RATE = 1.5;
 
@@ -41,7 +42,10 @@ export async function giveFeedback(message) {
         const utterance = new SpeechSynthesisUtterance(message);
         utterance.rate = NORMAL_RATE;
         utterance.lang = LANGUAGE;
-        utterance.onend = () => { console.log('FEEDBACK DONE'); resolve(); };
+
+        // as of writing this code, utterance.onend is broken. It is triggered right away and doesn't wait for the msg to finish
+        // utterance.onend = () => { console.log('FEEDBACK DONE'); resolve(); };
+        setTimeout(resolve, FEEDBACK_TIMEOUT)
         synth.speak(utterance);
     });
 }
@@ -53,7 +57,9 @@ export function readText(text) {
     utterance.rate = NORMAL_RATE;
     utterance.lang = LANGUAGE;
     utterance.onboundary = (event) => {onWordSpoken && onWordSpoken(event.charIndex);};
-    utterance.onend = () => onEndOfMessage && onEndOfMessage();
+
+    // as of writing this code, utterance.onend is broken. It is triggered right away and doesn't wait for the msg to finish
+    // utterance.onend = () => onEndOfMessage && onEndOfMessage();
     synth.speak(utterance)
 }
 

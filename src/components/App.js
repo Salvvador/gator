@@ -90,10 +90,10 @@ class App extends React.Component {
                 <div id='editor-container'></div>
                 <button onClick={this.start}>{ this.state.wordIndex === 0 ? 'Start' : 'Restart' }</button>
                 <button onClick={this.pause}>{ this.state.paused ? 'Resume' : 'Pause' }</button>
-                <p id='voice-rec-is-on'>Is recognizing gestures: false</p>
-                <p id='gesture-rec-is-on'>Is recognizing voice: false</p>
-                <p id='left-hand-present'>Is left hand present: false</p>
-                <p id='right-hand-present'>Is right hand present: false</p>
+                <p id='voice-rec-is-on'>Is recognizing voice: <span class='false'>false</span></p>
+                <p id='gesture-rec-is-on'>Is recognizing gestures: <span class='false'>false</span></p>
+                <p id='left-hand-present'>Is left hand present: <span class='false'>false</span></p>
+                <p id='right-hand-present'>Is right hand present: <span class='false'>false</span></p>
                 <p id='reading-is-on'></p>
                 <p id='detected-gesture'>Reconized gesture: - </p>
                 <p id='detected-voice-cmd'>Reconized voice command: - </p>
