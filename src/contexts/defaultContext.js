@@ -7,7 +7,12 @@ import {MODALITY, CONTEXT, GESTURE} from '../utils/enums';
 
 export function register() {
     eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.VOICE, 'select (.*)', selectAction);
+    eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.VOICE, 'restart', restartAction);
+    eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.VOICE, 'stop', stopAction);
+    eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.VOICE, 'repeat', rewindAction);
+    eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.VOICE, 'start', rewindAction);
     eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.GESTURE, GESTURE.WAVE_IN, rewindAction);
+    eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.GESTURE, GESTURE.STOP, stopAction);
 }
 
 async function selectAction(phrase) {
@@ -27,8 +32,17 @@ async function selectAction(phrase) {
     }
 }
 
+async function stopAction() {
+    tts.cancel();
+}
+
 async function rewindAction() {
     const startIndexOfCurrentSentence = getStartIndexOfSentence(txtEditor.getText(), tracker.getIndex());
     tracker.setIndex(startIndexOfCurrentSentence);
     tts.readText(txtEditor.getText(startIndexOfCurrentSentence));
+}
+
+async function restartAction() {
+    tracker.setIndex(0);
+    tts.readText(txtEditor.getText());
 }

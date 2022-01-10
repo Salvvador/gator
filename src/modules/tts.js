@@ -36,8 +36,7 @@ export function resume() {
 }
 
 export async function giveFeedback(message) {
-    return new Promise(resolve => { 
-        console.log('resolve');
+    return new Promise(resolve => {
         cancel();
         const utterance = new SpeechSynthesisUtterance(message);
         utterance.rate = NORMAL_RATE;
@@ -60,7 +59,7 @@ export function readText(text) {
 
     // as of writing this code, utterance.onend is broken. It is triggered right away and doesn't wait for the msg to finish
     // utterance.onend = () => onEndOfMessage && onEndOfMessage();
-    synth.speak(utterance)
+    synth.speak(utterance);
 }
 
 // export function speak(message, immediately = false, rate = NORMAL_RATE) {
