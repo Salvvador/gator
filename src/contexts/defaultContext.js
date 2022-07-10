@@ -11,6 +11,8 @@ export function register() {
     eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.VOICE, 'stop', stopAction);
     eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.VOICE, 'repeat', rewindAction);
     eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.VOICE, 'start', rewindAction);
+    eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.VOICE, 'undo', undoAction);
+    eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.VOICE, 'ando', undoAction);
     eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.GESTURE, GESTURE.WAVE_IN, rewindAction);
     eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.GESTURE, GESTURE.STOP, stopAction);
 }
@@ -45,4 +47,19 @@ async function rewindAction() {
 async function restartAction() {
     tracker.setIndex(0);
     tts.readText(txtEditor.getText());
+}
+
+async function undoAction() {
+    tts.pause();
+    console.log('undo');
+    try {
+        txtEditor.undo();
+        await tts.giveFeedback('Undoing');
+
+        const startIndexOfCurrentSentence = getStartIndexOfSentence(txtEditor.getText(), tracker.getIndex());
+        tracker.setIndex(startIndexOfCurrentSentence);
+        tts.readText(txtEditor.getText(startIndexOfCurrentSentence));
+    } catch(e) {
+        console.log('Undo error: ' + e);
+    }
 }

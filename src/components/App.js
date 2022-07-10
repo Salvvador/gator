@@ -83,6 +83,10 @@ class App extends React.Component {
         }
     }
 
+    undo = () => {
+        txtEditor.undo();
+    }
+
     render() {
         return (
             <>
@@ -90,6 +94,7 @@ class App extends React.Component {
                 <div id='editor-container'></div>
                 <button onClick={this.start}>{ this.state.wordIndex === 0 ? 'Start' : 'Restart' }</button>
                 <button onClick={this.pause}>{ this.state.paused ? 'Resume' : 'Pause' }</button>
+                <button onClick={this.undo}>{ 'Undo' }</button>
                 <p id='voice-rec-is-on'>Is recognizing voice: <span class='false'>false</span></p>
                 <p id='gesture-rec-is-on'>Is recognizing gestures: <span class='false'>false</span></p>
                 <p id='left-hand-present'>Is left hand present: <span class='false'>false</span></p>

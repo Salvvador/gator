@@ -68,6 +68,7 @@ async function triggerEventCallback(phrase) {
             return;
         }
     }
+    console.log('HERE');
     notInRegistryCallback(phrase);
 }
 

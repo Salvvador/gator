@@ -21,7 +21,8 @@ For better speach recognition use headphones
     v: select <phrase> - select phrase in text, stop reading, switch to SELECTED context
     v: stop - stop reading
     v: start / repeat - jump to the beginning of the current sentence (or jump to the previous sentence if cursor is at the beginning of sentence)
-    v: restart- jump to the beginning of the text
+    v: restart - jump to the beginning of the text
+    v: undo - undo the last change
     g: wave in - jump to the beginning of the current sentence (or jump to the previous sentence if cursor is at the beginning of sentence)
     g: stop - stop reading
 
