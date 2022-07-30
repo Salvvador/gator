@@ -15,6 +15,7 @@ export function register() {
     eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.VOICE, 'ando', undoAction);
     eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.GESTURE, GESTURE.WAVE_IN, rewindAction);
     eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.GESTURE, GESTURE.STOP, stopAction);
+    eventReg.registerEvent(CONTEXT.DEFAULT, MODALITY.GESTURE, GESTURE.SWIPE_LEFT, undoAction);
 }
 
 async function selectAction(phrase) {

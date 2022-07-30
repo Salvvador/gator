@@ -25,6 +25,7 @@ For better speach recognition use headphones
     v: undo - undo the last change
     g: wave in - jump to the beginning of the current sentence (or jump to the previous sentence if cursor is at the beginning of sentence)
     g: stop - stop reading
+    g: swipe_left - undo the last change
 
 #### SELECTED context:
     v: stop - unselect the prase, switch to  DEFAULT context, resume reading

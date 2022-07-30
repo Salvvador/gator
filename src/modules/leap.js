@@ -94,6 +94,10 @@ setInterval(async function() {
     if (isRightHandIndexFingerPointing(rightHand) && isRightHandMovingRight(rightHand)) {
         await performGestureAction(GESTURE.INDEX_FINGER_RIGHT);
     }
+
+    if (isRightHandFacingLeft(rightHand) && isRightHandMovingLeft(rightHand)) {
+        await performGestureAction(GESTURE.SWIPE_LEFT);
+    }
 }, 250);
 
 async function performGestureAction(eventName) {
