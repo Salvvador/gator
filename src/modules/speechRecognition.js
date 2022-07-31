@@ -1,5 +1,6 @@
 import * as tts from './tts';
 import * as evReg from './eventRegister';
+import * as logger from './logger';
 import {MODALITY} from '../utils/enums';
 const recognition = new window.webkitSpeechRecognition();
 
@@ -59,7 +60,7 @@ function resultCallback() {
 }
 
 async function triggerEventCallback(phrase) {
-    console.log('Phrase: ' + phrase)
+    logger.log('Event: speech - ' + phrase);
     for (const event of evReg.getActionHandlerPairs(MODALITY.VOICE)) {
         const regex = phrase.match(new RegExp(event.action, 'i'));
         if (regex && regex.length > 0) {
@@ -68,7 +69,6 @@ async function triggerEventCallback(phrase) {
             return;
         }
     }
-    console.log('HERE');
     notInRegistryCallback(phrase);
 }
 

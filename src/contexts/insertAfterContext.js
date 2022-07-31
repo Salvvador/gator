@@ -2,6 +2,7 @@ import * as tts from '../modules/tts';
 import * as eventReg from '../modules/eventRegister';
 import * as tracker from '../modules/tracker';
 import * as txtEditor from '../modules/textEditor';
+import * as logger from '../modules/logger';
 import {getStartIndexOfSentence} from '../utils/textParser';
 import {MODALITY, CONTEXT} from '../utils/enums';
 
@@ -11,7 +12,7 @@ export function register() {
 }
 
 async function stopSelection(phrase) {
-    console.log('insert after');
+    logger.log('Action triggered: stop selection');
     try {
         txtEditor.restart();
         await tts.giveFeedback('Unselecting');
@@ -22,13 +23,14 @@ async function stopSelection(phrase) {
 
         eventReg.setContext(CONTEXT.DEFAULT);
     } catch(e) {
-        console.log('Stop selection: ' + e);
-        console.log('Stop selection: ' + phrase);
+        console.error('Stop selection error: ' + e)
+        console.error('Stop selection error phrase: ' + phrase);
     }
 }
 
 async function insertAfterAction(phrase) {
-    console.log('insert after');
+    logger.log('Action triggered: Insert after');
+    logger.log('Insert after action phrase: ' + phrase);
     try {
         const newIndex = txtEditor.insertAfter(phrase[0]);
         await tts.giveFeedback('Inserted phrase ' + phrase[0]);
@@ -39,7 +41,7 @@ async function insertAfterAction(phrase) {
 
         eventReg.setContext(CONTEXT.DEFAULT);
     } catch(e) {
-        console.log('Insert after error: ' + e);
-        console.log('Insert after error phrase: ' + phrase);
+        console.error('Insert after error: ' + e);
+        console.error('Insert after error phrase: ' + phrase);
     }
 }

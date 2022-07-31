@@ -36,7 +36,7 @@ For better speach recognition use headphones
     g: fist_and_throw_away - delete selected phrase, switch to  DEFAULT   context, resume reading
     g: hand_upward - switch to REPLACE context
     g: index_finger_left - switch to INSERT_BEFORE context
-    g:  index_finger_right - switch to INSERT_AFTER context
+    g: index_finger_right - switch to INSERT_AFTER context
 
 #### INSERT BEFORE context:
     v: stop - unselect the prase, switch to  DEFAULT context, resume reading

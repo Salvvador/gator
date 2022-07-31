@@ -1,6 +1,7 @@
 import * as leap from 'leapjs';
 import {MODALITY, GESTURE} from '../utils/enums';
 import * as evReg from './eventRegister';
+import * as logger from './logger';
 
 const controller = new leap.Controller();
 
@@ -101,7 +102,7 @@ setInterval(async function() {
 }, 250);
 
 async function performGestureAction(eventName) {
-    console.log('Gesture: ' + eventName)
+    logger.log('Event: gesture - ' + eventName)
     document.getElementById('detected-gesture').innerHTML = `Reconized gesture: ${eventName} (${new Date().toLocaleTimeString()})`;
     for (const event of evReg.getActionHandlerPairs(MODALITY.GESTURE)) {
         if (event.action === eventName) {

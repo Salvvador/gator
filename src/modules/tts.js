@@ -1,3 +1,5 @@
+import * as logger from '../modules/logger';
+
 const synth = window.speechSynthesis;
 
 // const TIMEOUT_TO_CLEAR_UTTERANCE = 350;
@@ -36,6 +38,7 @@ export function resume() {
 }
 
 export async function giveFeedback(message) {
+    logger.log('TTS: Giving feedback - ' + message);
     return new Promise(resolve => {
         cancel();
         const utterance = new SpeechSynthesisUtterance(message);
@@ -51,7 +54,7 @@ export async function giveFeedback(message) {
 
 export function readText(text) {
     cancel();
-    console.log('STARTED SPEAKING');
+    logger.log('TTS: Reading text');
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = NORMAL_RATE;
     utterance.lang = LANGUAGE;

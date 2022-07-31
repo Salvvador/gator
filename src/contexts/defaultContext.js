@@ -2,6 +2,7 @@ import * as tts from '../modules/tts';
 import * as eventReg from '../modules/eventRegister';
 import * as tracker from '../modules/tracker';
 import * as txtEditor from '../modules/textEditor';
+import * as logger from '../modules/logger';
 import {findNearestMatchingPhrase, getStartIndexOfSentence} from '../utils/textParser';
 import {MODALITY, CONTEXT, GESTURE} from '../utils/enums';
 
@@ -19,6 +20,8 @@ export function register() {
 }
 
 async function selectAction(phrase) {
+    logger.log('Action triggered: select');
+    logger.log('Select action phrase: ' + phrase);
     tts.pause();
     const text = txtEditor.getText();
     const i = findNearestMatchingPhrase(text, phrase[0], tracker.getIndex());
@@ -28,7 +31,7 @@ async function selectAction(phrase) {
         eventReg.setContext(CONTEXT.SELECTED);
     } else {
         await tts.giveFeedback('Phrase not found. What I heard was: select ' + phrase);
-        console.log('Phrase not found. What I heard was: select ' + phrase);
+        logger.log('Phrase not found. What I heard was: select ' + phrase);
         const startIndexOfCurrentSentence = getStartIndexOfSentence(txtEditor.getText(), tracker.getIndex());
         tracker.setIndex(startIndexOfCurrentSentence);
         tts.readText(txtEditor.getText(startIndexOfCurrentSentence));
@@ -36,23 +39,26 @@ async function selectAction(phrase) {
 }
 
 async function stopAction() {
+    logger.log('Action triggered: stop');
     tts.cancel();
 }
 
 async function rewindAction() {
+    logger.log('Action triggered: rewind');
     const startIndexOfCurrentSentence = getStartIndexOfSentence(txtEditor.getText(), tracker.getIndex());
     tracker.setIndex(startIndexOfCurrentSentence);
     tts.readText(txtEditor.getText(startIndexOfCurrentSentence));
 }
 
 async function restartAction() {
+    logger.log('Action triggered: restart');
     tracker.setIndex(0);
     tts.readText(txtEditor.getText());
 }
 
 async function undoAction() {
+    logger.log('Action triggered: undo');
     tts.pause();
-    console.log('undo');
     try {
         txtEditor.undo();
         await tts.giveFeedback('Undoing');
@@ -61,6 +67,6 @@ async function undoAction() {
         tracker.setIndex(startIndexOfCurrentSentence);
         tts.readText(txtEditor.getText(startIndexOfCurrentSentence));
     } catch(e) {
-        console.log('Undo error: ' + e);
+        console.error('Undo error: ' + e);
     }
 }

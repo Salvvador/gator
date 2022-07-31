@@ -4,6 +4,7 @@ import * as tracker from '../modules/tracker';
 import * as txtEditor from '../modules/textEditor';
 import {getStartIndexOfSentence} from '../utils/textParser';
 import {MODALITY, CONTEXT} from '../utils/enums';
+import * as logger from '../modules/logger';
 
 export function register() {
     eventReg.registerEvent(CONTEXT.REPLACE, MODALITY.VOICE, 'stop', stopSelection);
@@ -11,7 +12,7 @@ export function register() {
 }
 
 async function stopSelection(phrase) {
-    console.log('insert after')
+    logger.log('Action triggered: stop selection');
     try {
         txtEditor.restart();
         await tts.giveFeedback('Unselecting');
@@ -22,13 +23,14 @@ async function stopSelection(phrase) {
 
         eventReg.setContext(CONTEXT.DEFAULT);
     } catch(e) {
-        console.log('Stop selection: ' + e)
-        console.log('Stop selection: ' + phrase);
+        console.error('Stop selection error: ' + e)
+        console.error('Stop selection error phrase: ' + phrase);
     }
 }
 
 async function replaceAction(phrase) {
-    console.log('replace')
+    logger.log('Action triggered: replace');
+    logger.log('Replace action action phrase: ' + phrase);
     try {
         const newIndex = txtEditor.replaceSelected(phrase[0]);
         await tts.giveFeedback('Phrase replaced with ' + phrase[0]);
@@ -39,7 +41,7 @@ async function replaceAction(phrase) {
 
         eventReg.setContext(CONTEXT.DEFAULT);
     } catch(e) {
-        console.log('Replace error: ' + e)
-        console.log('Replace error phrase: ' + phrase);
+        console.error('Replace error: ' + e)
+        console.error('Replace error phrase: ' + phrase);
     }
 }
